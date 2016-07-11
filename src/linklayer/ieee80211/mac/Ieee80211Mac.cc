@@ -870,6 +870,7 @@ void Ieee80211Mac::handleCommand(cMessage *msg)
 #include "ManetAddress.h"
 #include "UDPPacket.h"
 #include "BatMobileV1Msg_m.h"
+#include "BatMobileMessage_m.h"
 void Ieee80211Mac::handleLowerMsg(cPacket *msg)
 {
     EV<<"->Enter handleLowerMsg...\n";
@@ -898,6 +899,9 @@ void Ieee80211Mac::handleLowerMsg(cPacket *msg)
 
 
 
+    /*
+     * BEGIN: MOBILITY-AWARE EXTENSION
+     */
     cModule *host = getContainingNode(this);
     LinkQualityService *linkQualityService = dynamic_cast<LinkQualityService*>(host->getSubmodule("linkQualityService"));
     if(cinfo && linkQualityService && frame)
@@ -908,38 +912,45 @@ void Ieee80211Mac::handleLowerMsg(cPacket *msg)
         IPv4Datagram *ipDatagram = dynamic_cast<IPv4Datagram*>(macFrame->decapsulate());
         if(ipDatagram)
         {
-            UDPPacket *udpPacket = dynamic_cast<UDPPacket*>(ipDatagram->decapsulate());
+            cPacket *ipDatagramPayload = ipDatagram->decapsulate();
+            UDPPacket *udpPacket = dynamic_cast<UDPPacket*>(ipDatagramPayload);
             if(udpPacket)
             {
                 cPacket *payload = udpPacket->decapsulate();
+                ManetAddress forwarder;
                 BatMobileV1_BatmanPacket *batMobileV1Packet = dynamic_cast<BatMobileV1_BatmanPacket*>(payload);
+                BatMobilePacket *batMobilePacket = dynamic_cast<BatMobilePacket*>(payload);
                 if(batMobileV1Packet)
                 {
-                    // BatMobile - sender is equal to forwarder due to 1-hop forwarding
+                    // BatMobile - sender is equal to forwarder due to 1-hop BC
+                    forwarder = batMobileV1Packet->getOrig();
+                }
+                else if(batMobilePacket)
+                {
+                    forwarder = batMobilePacket->getSourceAddress();
+                }
 
-                    ManetAddress sender = batMobileV1Packet->getOrig();
-                    linkQualityService->updateLossRate(sender, cinfo->getLossRate());
-                    linkQualityService->updateRSSI(sender, cinfo->getRecPow());
-                    linkQualityService->updateSNR(sender, cinfo->getSnr());
+                if(!forwarder.isUnspecified())
+                {
+                    linkQualityService->updateLossRate(forwarder, cinfo->getLossRate());
+                    linkQualityService->updateRSSI(forwarder, cinfo->getRecPow());
+                    linkQualityService->updateSNR(forwarder, cinfo->getSnr());
                 }
 
                 if(payload)
                     delete payload;
-
-                delete udpPacket;
             }
-
-
+            if(ipDatagramPayload)
+                delete ipDatagramPayload;
 
 
             delete ipDatagram;
         }
-
-
         delete macFrame;
     }
-
-
+    /*
+     * END: MOBILITY-AWARE EXTENSION
+     */
 
 
 

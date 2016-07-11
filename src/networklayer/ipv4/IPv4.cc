@@ -532,6 +532,9 @@ void IPv4::routeUnicastPacket(IPv4Datagram *datagram, const InterfaceEntry *from
 #include "RouteScheduler.h"
 void IPv4::routeUnicastPacketFinish(IPv4Datagram *datagram, const InterfaceEntry *fromIE, const InterfaceEntry *destIE, IPv4Address nextHopAddr)
 {
+    /*
+     * BEGIN: MOBILITY-AWARE EXTENSION
+     */
     ManetAddress forwarder(nextHopAddr);
     cModule *host = getContainingNode(this);
 
@@ -541,6 +544,9 @@ void IPv4::routeUnicastPacketFinish(IPv4Datagram *datagram, const InterfaceEntry
         ManetAddress destination(datagram->getDestAddress());
         forwarder = scheduler->getForwarderNode(destination , forwarder);
     }
+    /*
+     * END: MOBILITY-AWARE EXTENSION
+     */
 
     EV << "output interface is " << destIE->getName() << ", next-hop address: " << nextHopAddr << "\n";
     numForwarded++;

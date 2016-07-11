@@ -1,8 +1,7 @@
 import os.path
 
 baseDir = "results/";
-protocols = ["Batman", "BatMobileV1", "BatMobile", "BatMobile_CSV",  "AODV"];
-
+protocols = ["Batman", "BatMobileV1", "BatMobile", "BatMobile_CSV",  "AODV", "AODV_CSV", "OLSR"];
 
 def computePDR(_file):
 	pdr = 0
