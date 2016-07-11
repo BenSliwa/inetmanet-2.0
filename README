@@ -1,3 +1,23 @@
+MOBILITY-AWARE EXTENSION FOR INETMANET
+=================================
+The addition to the INETMANET framework of OMNeT++ uses a cross-layer approach to 
+utilize application layer knowledge about controlled mobility to enhance the routing 
+decisions. We use the well-known mobility model from Reynolds as a basic structure 
+for our logical submodules, which handle specific tasks like exploration, collision 
+avoidance and maintenance of the swarm coherence. Different novel routing metrics use
+the results of a new prediction method for future trajectories for their decision-making.
+
+An example network for comparing mobility-aware and established protocols can be 
+found in /mobilityaware/examples/batmobile.
+The PDR can be calculated from the result files by executing the pdr.py file (python pdr.py).
+
+Related publication:
+
+B. Sliwa, D. Behnke, C.Ide and C. Wietfeld, "B.A.T.Mobile: Leveraging Mobility Control 
+Knowledge for Efficient Routing in Mobile Robotic Networks", 2016, submitted for publication. 
+[Online]. Available: http://arxiv.org/abs/1607.01223
+
+
 INET Framework for OMNEST/OMNeT++
 =================================
 
