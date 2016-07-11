@@ -528,11 +528,23 @@ void IPv4::routeUnicastPacket(IPv4Datagram *datagram, const InterfaceEntry *from
     }
 }
 
+#include "ManetAddress.h"
+#include "RouteScheduler.h"
 void IPv4::routeUnicastPacketFinish(IPv4Datagram *datagram, const InterfaceEntry *fromIE, const InterfaceEntry *destIE, IPv4Address nextHopAddr)
 {
+    ManetAddress forwarder(nextHopAddr);
+    cModule *host = getContainingNode(this);
+
+    RouteScheduler *scheduler = dynamic_cast<RouteScheduler*>(host->getSubmodule("routeScheduler"));
+    if(scheduler)
+    {
+        ManetAddress destination(datagram->getDestAddress());
+        forwarder = scheduler->getForwarderNode(destination , forwarder);
+    }
+
     EV << "output interface is " << destIE->getName() << ", next-hop address: " << nextHopAddr << "\n";
     numForwarded++;
-    fragmentPostRouting(datagram, destIE, nextHopAddr);
+    fragmentPostRouting(datagram, destIE, forwarder.getIPv4());
 }
 
 void IPv4::routeLocalBroadcastPacket(IPv4Datagram *datagram, const InterfaceEntry *destIE)

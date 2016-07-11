@@ -17,13 +17,24 @@
 #define __INETMANET_2_0_LINKQUALITYSERVICE_H_
 
 #include <omnetpp.h>
+#include "ManetAddress.h"
 
 class LinkQualityService : public cSimpleModule
 {
   protected:
     virtual void initialize();
 
+  public:
+    void updateSNR(const ManetAddress &_node, double _snr);
+    void updateRSSI(const ManetAddress &_node, double _rssi_mW);
+    void updateLossRate(const ManetAddress &_node, double _lossRate);
+
+  private:
     double mW2dBm(double _mW);
+
+
+
+
 };
 
 #endif

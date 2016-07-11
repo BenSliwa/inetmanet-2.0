@@ -11,21 +11,8 @@
 // 
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
+//
 
-#ifndef __INETMANET_2_0_ROUTESCHEDULER_H_
-#define __INETMANET_2_0_ROUTESCHEDULER_H_
-
-#include <omnetpp.h>
-#include "ManetAddress.h"
-
-class RouteScheduler : public cSimpleModule
+packet MobilityAwarePacket
 {
-protected:
-    virtual void initialize();
-
-public:
-    ManetAddress getForwarderNode(const ManetAddress &_destination, const ManetAddress &_proposedForwarder);
-};
-
-#endif
+}

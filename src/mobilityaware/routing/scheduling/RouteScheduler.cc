@@ -19,10 +19,9 @@ Define_Module(RouteScheduler);
 
 void RouteScheduler::initialize()
 {
-    // TODO - Generated method body
 }
 
-void RouteScheduler::handleMessage(cMessage *msg)
+ManetAddress RouteScheduler::getForwarderNode(const ManetAddress &_destination, const ManetAddress &_proposedForwarder)
 {
-    // TODO - Generated method body
+    return _proposedForwarder;
 }

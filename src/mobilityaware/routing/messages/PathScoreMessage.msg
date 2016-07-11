@@ -11,21 +11,29 @@
 // 
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
+//
 
-#ifndef __INETMANET_2_0_ROUTESCHEDULER_H_
-#define __INETMANET_2_0_ROUTESCHEDULER_H_
-
-#include <omnetpp.h>
+cplusplus {{
 #include "ManetAddress.h"
+#include "Coord.h"
 
-class RouteScheduler : public cSimpleModule
+#define PathScorePacketSize 7 + 27
+
+}}
+
+class noncobject IPv4Address;
+class noncobject ManetAddress;
+class noncobject Coord;
+
+
+packet PathScorePacket
 {
-protected:
-    virtual void initialize();
+    byteLength = PathScorePacketSize;
+    uint8_t ttl;
+    unsigned short sequenceNumber;
+    ManetAddress sourceAddress;
 
-public:
-    ManetAddress getForwarderNode(const ManetAddress &_destination, const ManetAddress &_proposedForwarder);
-};
-
-#endif
+    Coord position;
+    Coord predictedPosition;
+    double score;
+}

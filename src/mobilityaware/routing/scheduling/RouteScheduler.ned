@@ -15,9 +15,8 @@
 
 package inet.mobilityaware.routing.scheduling;
 
-//
-// TODO auto-generated module
-//
+
 module RouteScheduler like IRouteScheduler
 {
+    @class(RouteScheduler);
 }

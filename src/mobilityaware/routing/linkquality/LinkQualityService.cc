@@ -22,6 +22,22 @@ void LinkQualityService::initialize()
 {
 }
 
+void LinkQualityService::updateSNR(const ManetAddress &_node, double _snr)
+{
+
+}
+
+void LinkQualityService::updateRSSI(const ManetAddress &_node, double _rssi_mW)
+{
+    double rssi_dBm = mW2dBm(_rssi_mW);
+
+}
+
+void LinkQualityService::updateLossRate(const ManetAddress &_node, double _lossRate)
+{
+
+}
+
 double LinkQualityService::mW2dBm(double _mW)
 {
     return 10*log10(_mW);

@@ -865,11 +865,17 @@ void Ieee80211Mac::handleCommand(cMessage *msg)
     }
 }
 
+#include "IPv4Datagram.h"
+#include "LinkQualityService.h"
+#include "ManetAddress.h"
+#include "UDPPacket.h"
+#include "BatMobileV1Msg_m.h"
 void Ieee80211Mac::handleLowerMsg(cPacket *msg)
 {
     EV<<"->Enter handleLowerMsg...\n";
     EV << "received message from lower layer: " << msg << endl;
     Radio80211aControlInfo * cinfo = dynamic_cast<Radio80211aControlInfo *>(msg->getControlInfo());
+
     if (cinfo && cinfo->getAirtimeMetric())
     {
         double rtsTime = 0;
@@ -888,6 +894,56 @@ void Ieee80211Mac::handleLowerMsg(cPacket *msg)
     }
 
     Ieee80211Frame *frame = dynamic_cast<Ieee80211Frame *>(msg);
+
+
+
+
+    cModule *host = getContainingNode(this);
+    LinkQualityService *linkQualityService = dynamic_cast<LinkQualityService*>(host->getSubmodule("linkQualityService"));
+    if(cinfo && linkQualityService && frame)
+    {
+        Ieee80211Frame *macFrame = frame->dup();
+        macFrame->removeControlInfo();
+
+        IPv4Datagram *ipDatagram = dynamic_cast<IPv4Datagram*>(macFrame->decapsulate());
+        if(ipDatagram)
+        {
+            UDPPacket *udpPacket = dynamic_cast<UDPPacket*>(ipDatagram->decapsulate());
+            if(udpPacket)
+            {
+                cPacket *payload = udpPacket->decapsulate();
+                BatMobileV1_BatmanPacket *batMobileV1Packet = dynamic_cast<BatMobileV1_BatmanPacket*>(payload);
+                if(batMobileV1Packet)
+                {
+                    // BatMobile - sender is equal to forwarder due to 1-hop forwarding
+
+                    ManetAddress sender = batMobileV1Packet->getOrig();
+                    linkQualityService->updateLossRate(sender, cinfo->getLossRate());
+                    linkQualityService->updateRSSI(sender, cinfo->getRecPow());
+                    linkQualityService->updateSNR(sender, cinfo->getSnr());
+                }
+
+                if(payload)
+                    delete payload;
+
+                delete udpPacket;
+            }
+
+
+
+
+            delete ipDatagram;
+        }
+
+
+        delete macFrame;
+    }
+
+
+
+
+
+
 
     if (msg->getKind() != COLLISION && msg->getKind() != BITERROR)
         sendNotification(NF_LINK_FULL_PROMISCUOUS, msg);
