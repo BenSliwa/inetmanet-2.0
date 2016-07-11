@@ -32,6 +32,7 @@ class INET_API ReynoldsMobilityModel : public MovingMobilityBase
 
 public:
     ReynoldsMobilityModel();
+    ~ReynoldsMobilityModel();
 
     void init(LocationService *_locationService);
 

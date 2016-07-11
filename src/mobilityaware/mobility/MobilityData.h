@@ -20,6 +20,8 @@ public:
     void output();
 
 
+
+
 public:
     int timestamp_ms;
     Coord position;

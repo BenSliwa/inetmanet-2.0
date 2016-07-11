@@ -94,6 +94,10 @@ std::deque<MobilityData> TrajectoryPrediction::predict(const std::deque<Mobility
     std::deque<MobilityData> predictedData;
     std::deque<MobilityData> historyData = _historyData;
 
+
+
+
+
     if(historyData.size()>0)
     {
         MobilityData lastValidData = historyData.at(historyData.size()-1);
@@ -205,8 +209,17 @@ MobilityData TrajectoryPrediction::predictWithHistory(std::deque<MobilityData> _
 
             positionIncrement += increment;
             totalWeight += weight;
+
+
+
+            //if(currentData.timestamp_ms-lastData.timestamp_ms!=100)
+            //    std::cout << (currentData.timestamp_ms-lastData.timestamp_ms) << std::endl;
+
+
         }
         positionIncrement = positionIncrement/totalWeight;
+
+
 
         //
         MobilityData nextData = lastValidData;

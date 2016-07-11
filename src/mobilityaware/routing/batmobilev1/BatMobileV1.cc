@@ -112,15 +112,6 @@ void BatMobileV1::initialize(int _stage)
 
     if (_stage == 4)
     {
-        // geoassisted
-        m_address = getAddress();
-
-
-        p_prediction->init(p_locationService, 50, 50, 100);
-        p_metric->init(p_prediction->getPredictionWidth(), 200);
-
-
-
 
         //
         found_ifs = 0;
@@ -151,6 +142,25 @@ void BatMobileV1::initialize(int _stage)
 
         registerRoutingModule();
         //createTimerQueue();
+
+
+
+
+        // geoassisted
+        p_prediction->init(p_locationService, 50, 50, 100);
+        p_metric->init(p_prediction->getPredictionWidth(), 200);
+
+
+
+
+
+
+
+
+
+
+
+
 
         const char *preferedGateWay = par("preferedGateWay");
         pref_gateway =  ManetAddress(IPvXAddressResolver().resolve(preferedGateWay, IPvXAddressResolver::ADDR_IPv4));
@@ -503,6 +513,8 @@ BatMobileV1_BatmanPacket *BatMobileV1::buildDefaultBatmanPkt(const BatMobileV1_B
         pkt->setPredictedPosition(predictedPosition);
         pkt->setScore(score);
     }
+    else
+        std::cout << "WTF" << std::endl;
 
     return pkt;
 }

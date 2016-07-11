@@ -213,7 +213,6 @@ void BatMobile::initialize(int _stage)
     {
         registerRoutingModule();
 
-        m_address = getAddress();
         m_broadcastInterval_s = par("broadcastInterval").doubleValue();
 
         p_prediction->init(p_locationService, 50, 50, 100);

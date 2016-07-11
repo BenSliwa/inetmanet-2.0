@@ -441,12 +441,27 @@ void BatMobileV1::handleMobilityData(BatMobileV1_BatmanPacket *_packet, const Ma
         ManetAddress sourceAddress = _packet->getOrig();
         int sequenceNumber = _packet->getSeqNumber();
 
+
+
         // compute the new path score
         Coord currentPosition = p_locationService->getCurrentMobilityData().position;
         std::deque<MobilityData> predictedData = p_prediction->predictOwn(simTime().dbl() * 1000);
         Coord predictedPosition;
         if(predictedData.size()>0)
+        {
             predictedPosition = predictedData.at(predictedData.size()-1).position;
+
+
+            /*
+            std::stringstream stream;
+            stream << predictedPosition.x;
+
+            std::cout << "stream " << stream.str() << std::endl;
+            if(stream.str()=="-nan")
+            {
+                std::cout << "NAN " << predictedData.size() << std::endl;
+            }*/
+        }
         else
             predictedPosition = currentPosition;
 
@@ -455,6 +470,22 @@ void BatMobileV1::handleMobilityData(BatMobileV1_BatmanPacket *_packet, const Ma
         double predictedDistance_m = predictedPosition.distance(_packet->getPredictedPosition());
         double stepWidth_m = p_mobility->getStepWidth();
         double score = p_metric->updatePathScore(_packet->getScore(), currentDistance_m, predictedDistance_m, stepWidth_m, stepWidth_m);
+
+       // std::cout << sourceAddress << " via  " << _forwarder << std::endl;
+
+
+
+        Coord p0 = _packet->getPosition();
+          Coord p1 = _packet->getPredictedPosition();
+
+
+
+
+
+
+
+       // std::cout << currentPosition.x << "," << currentPosition.y << "," << currentPosition.z << "  -  " << predictedPosition.x << "," << predictedPosition.y << "," << predictedPosition.z << std::endl;
+       // std::cout << p0.x << "," << p0.y << "," << p0.z << "  -  " << p1.x << "," << p1.y << "," << p1.z << std::endl;
 
 
         _packet->setScore(score);

@@ -14,15 +14,15 @@
 // 
 
 #include "LinkQualityService.h"
+#include "math.h"
 
 Define_Module(LinkQualityService);
 
 void LinkQualityService::initialize()
 {
-    // TODO - Generated method body
 }
 
-void LinkQualityService::handleMessage(cMessage *msg)
+double LinkQualityService::mW2dBm(double _mW)
 {
-    // TODO - Generated method body
+    return 10*log10(_mW);
 }

@@ -42,6 +42,25 @@ ReynoldsMobilityModel::ReynoldsMobilityModel() : MovingMobilityBase(),
 
 }
 
+ReynoldsMobilityModel::~ReynoldsMobilityModel()
+{
+    if(m_actionSelection)
+        delete m_actionSelection;
+
+    std::map<Steering*, double>::iterator it;
+    for ( it = m_steerings.begin(); it != m_steerings.end(); it++ )
+    {
+        Steering *steering = it->first;
+        delete steering;
+    }
+
+    if(m_locomotion)
+        delete m_locomotion;
+
+    if(m_dataAccess)
+        delete m_dataAccess;
+}
+
 void ReynoldsMobilityModel::init(LocationService *_locationService)
 {
     p_locationService = _locationService;
@@ -246,6 +265,8 @@ void ReynoldsMobilityModel::move()
     else
     {
         // gps noise
+        m_currentMobilityData.timestamp_ms = simTime().dbl() * 1000;
+        p_locationService->addCurrentMobilityData(m_currentMobilityData);
     }
 
 }

@@ -17,9 +17,12 @@
 #include "IPvXAddressResolver.h"
 
 MobilityAwareRoutingBase::MobilityAwareRoutingBase() :
+    p_host(0),
     p_mobility(0),
     p_prediction(0),
-    p_locationService(0)
+    p_linkQualityService(0),
+    p_locationService(0),
+    p_metric(0)
 {
 
 }
@@ -104,6 +107,7 @@ void MobilityAwareRoutingBase::initialize(int _stage)
 
         p_mobility->init(p_locationService);
 
-        m_address = getAddress();
+        m_hostName = getOwnHostName();
+        m_address = ManetAddress(getIp(m_hostName));
     }
 }

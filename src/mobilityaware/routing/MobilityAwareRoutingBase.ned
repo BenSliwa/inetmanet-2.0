@@ -18,12 +18,10 @@ package inet.mobilityaware.routing;
 import inet.networklayer.manetrouting.base.BaseRouting;
 import inet.networklayer.IManetRouting;
 
-simple MobilityAwareRoutingBase  extends BaseRouting like IManetRouting
+simple MobilityAwareRoutingBase extends BaseRouting like IManetRouting
 {
     parameters:
         bool PublicRoutingTables = default(false);
-        
-        int predictionWidth = default(18);
         
 	gates:
         input from_ip;

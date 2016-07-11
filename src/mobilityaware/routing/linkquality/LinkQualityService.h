@@ -18,14 +18,12 @@
 
 #include <omnetpp.h>
 
-/**
- * TODO - Generated class
- */
 class LinkQualityService : public cSimpleModule
 {
   protected:
     virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
+
+    double mW2dBm(double _mW);
 };
 
 #endif
