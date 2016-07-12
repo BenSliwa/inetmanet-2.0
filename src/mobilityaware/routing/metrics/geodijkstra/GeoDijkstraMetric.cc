@@ -30,9 +30,25 @@ void GeoDijkstraMetric::init(LocationService *_locationService, TrajectoryPredic
 {
     p_locationService = _locationService;
     p_prediction = _prediction;
+}
 
+Agent* GeoDijkstraMetric::getNextHop(Agent *_start, Agent *_destination)
+{
+    Agent *nextHop = 0;
+    std::deque<Agent*> agents = p_locationService->getAgents();
+    std::map<Agent*,std::deque<Agent*>> linkMap = buildLinkMap();
 
-    // build the link map
+    GeoDijkstra dijkstra;
+    std::deque<Agent*> path = dijkstra.getDijkstraPath(_start, _destination, agents, linkMap);
+
+    if(path.size()>1)
+        nextHop = path.at(1);
+
+    return nextHop;
+}
+
+std::map<Agent*,std::deque<Agent*>> GeoDijkstraMetric::buildLinkMap()
+{
     double time_ms = simTime().dbl() * 1000;
     std::deque<Agent*> agents = p_locationService->getAgents();
     std::map<Agent*,std::deque<Agent*>> linkMap;
@@ -60,14 +76,7 @@ void GeoDijkstraMetric::init(LocationService *_locationService, TrajectoryPredic
         linkMap.insert(std::pair<Agent*, std::deque<Agent*>>(from, links));
     }
 
-
-    //
-    Agent *agent;
-    Agent *target;
-
-    GeoDijkstra dijkstra;
-    dijkstra.getDijkstraPath(agent, target, agents, linkMap);
-
+    return linkMap;
 }
 
 void GeoDijkstraMetric::initialize()

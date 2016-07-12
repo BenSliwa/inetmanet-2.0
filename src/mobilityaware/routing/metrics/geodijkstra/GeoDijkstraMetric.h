@@ -17,6 +17,8 @@
 #define __INETMANET_2_0_GEODIJKSTRAMETRIC_H_
 
 #include <omnetpp.h>
+#include "ManetAddress.h"
+
 #include "RoutingMetric.h"
 #include "LocationService.h"
 #include "TrajectoryPrediction.h"
@@ -26,10 +28,13 @@ class GeoDijkstraMetric : public RoutingMetric
 public:
     GeoDijkstraMetric();
 
-
-
     void init(LocationService *_locationService, TrajectoryPrediction *_prediction);
 
+    Agent* getNextHop(Agent *_start, Agent *_destination);
+
+
+private:
+    std::map<Agent*,std::deque<Agent*>> buildLinkMap();
 
 protected:
     virtual void initialize();
